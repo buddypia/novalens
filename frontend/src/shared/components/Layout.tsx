@@ -1,6 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Scan, History, Github } from 'lucide-react';
+import { Scan, History, Github, Sun, Moon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTheme } from '@shared/hooks/use-theme';
 
 const NAV_ITEMS = [
   { to: '/', label: 'Analyze', icon: Scan },
@@ -9,6 +10,7 @@ const NAV_ITEMS = [
 
 export function Layout() {
   const { pathname } = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -47,8 +49,19 @@ export function Layout() {
             <span className="hidden text-xs text-muted-foreground sm:block">
               Powered by Amazon Nova 2 Lite
             </span>
+            <div
+              className="cursor-pointer rounded-md p-1.5 text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
+              onClick={toggleTheme}
+              title={`Current: ${theme}. Click to toggle.`}
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+            </div>
             <a
-              href="https://github.com"
+              href="https://github.com/buddypia/novalens"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-md p-1.5 text-muted-foreground hover:text-foreground"

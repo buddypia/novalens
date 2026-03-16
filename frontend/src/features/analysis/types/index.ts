@@ -92,10 +92,10 @@ export const SEVERITY_ORDER: Record<Severity, number> = {
 };
 
 export const SEVERITY_COLORS: Record<Severity, string> = {
-  critical: 'text-red-600 bg-red-50 border-red-200',
-  major: 'text-orange-600 bg-orange-50 border-orange-200',
-  minor: 'text-yellow-600 bg-yellow-50 border-yellow-200',
-  info: 'text-blue-600 bg-blue-50 border-blue-200',
+  critical: 'text-red-600 bg-red-50 border-red-200 dark:text-red-400 dark:bg-red-950 dark:border-red-800',
+  major: 'text-orange-600 bg-orange-50 border-orange-200 dark:text-orange-400 dark:bg-orange-950 dark:border-orange-800',
+  minor: 'text-yellow-600 bg-yellow-50 border-yellow-200 dark:text-yellow-400 dark:bg-yellow-950 dark:border-yellow-800',
+  info: 'text-blue-600 bg-blue-50 border-blue-200 dark:text-blue-400 dark:bg-blue-950 dark:border-blue-800',
 };
 
 export const CATEGORY_LABELS: Record<IssueCategory, string> = {
