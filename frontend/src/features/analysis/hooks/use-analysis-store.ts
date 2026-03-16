@@ -4,9 +4,6 @@ import type { PRFile } from '../api/github';
 import { AGENT_STEPS } from '../types';
 import { createAnalysis, getAnalysis, listAnalyses, fileToBase64 } from '../api';
 import { buildDiffSummary } from '../api/github';
-import { MOCK_RESULTS } from '../api/mock-data';
-
-const USE_MOCK = import.meta.env.DEV && !import.meta.env.VITE_API_ENABLED;
 
 interface AnalysisState {
   currentAnalysis: Analysis | null;
@@ -50,41 +47,6 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
     });
 
     const diff = buildDiffSummary(prFiles).slice(0, MAX_DIFF_LENGTH);
-    const analysisId = crypto.randomUUID();
-
-    if (USE_MOCK) {
-      set({
-        currentAnalysis: {
-          id: analysisId,
-          userId: 'demo',
-          status: 'analyzing',
-          createdAt: new Date().toISOString(),
-          input: {
-            hasScreenshot: !!screenshotFile,
-            codeLanguage,
-            codeLength: diff.length,
-            prUrl,
-            prTitle,
-            fileCount: prFiles.length,
-          },
-        },
-        isSubmitting: false,
-      });
-
-      get().simulateAgentProgress(() => {
-        set((state) => ({
-          currentAnalysis: state.currentAnalysis
-            ? {
-                ...state.currentAnalysis,
-                status: 'completed',
-                completedAt: new Date().toISOString(),
-                results: MOCK_RESULTS,
-              }
-            : null,
-        }));
-      });
-      return;
-    }
 
     try {
       let screenshotBase64: string | undefined;
@@ -161,10 +123,6 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
   },
 
   loadHistory: async () => {
-    if (USE_MOCK) {
-      set({ isLoadingHistory: false, analyses: [] });
-      return;
-    }
     set({ isLoadingHistory: true });
     try {
       const { items } = await listAnalyses(20);
