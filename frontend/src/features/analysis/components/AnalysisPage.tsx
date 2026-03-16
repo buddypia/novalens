@@ -1,6 +1,7 @@
 import { AnalysisInputForm } from './AnalysisInputForm';
 import { AgentTracePanel } from './AgentTracePanel';
 import { AnalysisReport } from './AnalysisReport';
+import { ReportActions } from './ReportActions';
 import { useAnalysisStore } from '../hooks/use-analysis-store';
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
@@ -24,8 +25,9 @@ export function AnalysisPage() {
 
       {showResults && (
         <div className="grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-6">
             <AgentTracePanel />
+            <ReportActions />
           </div>
           <div className="lg:col-span-2">
             <AnalysisReport />
