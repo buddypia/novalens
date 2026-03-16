@@ -1,0 +1,64 @@
+{
+  "handoff_version": "1.0",
+  "from_stage": {
+    "number": 2,
+    "skill": "market-researcher",
+    "model_used": "opus"
+  },
+  "to_stage": {
+    "number": 3,
+    "skill": "mvp-scoper"
+  },
+  "timestamp": "2026-03-16T10:15:00Z",
+  "result": {
+    "status": "PASS",
+    "confidence": "high",
+    "output_files": [
+      "MARKET-RESEARCH.md",
+      "data/market-research.json"
+    ]
+  },
+  "context": {
+    "key_decisions": [
+      "TAM $1.5B (AI Code Review + Accessibility Testing 통합)",
+      "직접 경쟁사 0건 — 크로스모달 (UI+코드) 분석은 미개척 블루오션",
+      "Beachhead: CI/CD 운영 Frontend SaaS 팀 (5-50명) + 접근성 규제 대상",
+      "Viability Score 19/25 (Recommended)",
+      "Primary Persona: Frontend Tech Lead (Yuki)",
+      "Evidence Grade: B (T2: 8건, T3: 5건)"
+    ],
+    "assumptions": [
+      "크로스모달 니치 SAM을 TAM의 13%로 추정 (검증 필요)",
+      "SOM $2M은 유사 스타트업 참고 추정 (3년 내)",
+      "Nova 2 Lite의 공간 추론 한계가 UI 분석 품질에 미치는 영향은 미검증"
+    ],
+    "open_questions": [
+      "Nova 2 Lite의 실제 UI 분석 정확도 (벤치마크 필요)",
+      "접근성 규제 대상 기업의 실제 지불 의향 금액",
+      "Percy AI Visual Review Agent의 코드 분석 확장 로드맵"
+    ],
+    "constraints_propagated": [
+      "budget: low ($0-50/month)",
+      "timeline: month (1-3 months)",
+      "team_size: small (2-5)",
+      "platform_context: AWS Hackathon",
+      "core_tech: Nova 2 Lite (Bedrock API) - mandatory",
+      "beachhead: Frontend SaaS teams with CI/CD + accessibility regulation"
+    ]
+  },
+  "quality": {
+    "tier": "Critical",
+    "checks_passed": [
+      "TAM/SAM/SOM 수치 존재 (value + unit)",
+      "페르소나 3명 정의 (required >= 1)",
+      "경쟁사 6개 분석 (required >= 3)",
+      "비즈니스 타당성 스코어 19/25",
+      "SWOT 분석 완료",
+      "Evidence Summary 포함"
+    ],
+    "warnings": [
+      "T1 (자체 데이터) 0건 — 모든 데이터가 외부 소스 또는 AI 추정",
+      "크로스모달 니치 SAM 추정의 불확실성 높음"
+    ]
+  }
+}

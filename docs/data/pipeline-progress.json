@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "pipeline": "brief2dev",
+  "project": "NovaLens",
+  "run_id": "brief2dev-20260316-novalens",
+  "started_at": "2026-03-16T10:00:00Z",
+  "completed_at": "2026-03-16T11:30:00Z",
+  "status": "completed",
+  "stages": [
+    {
+      "number": 1,
+      "name": "business-analyzer",
+      "status": "completed",
+      "confidence": "high",
+      "attempts": 1,
+      "outputs": ["BUSINESS-CONTEXT.md", "data/business-context.json"]
+    },
+    {
+      "number": 2,
+      "name": "market-researcher",
+      "status": "completed",
+      "confidence": "high",
+      "attempts": 1,
+      "outputs": ["MARKET-RESEARCH.md", "data/market-research.json"]
+    },
+    {
+      "number": 3,
+      "name": "mvp-scoper",
+      "status": "completed",
+      "confidence": "high",
+      "attempts": 1,
+      "outputs": ["MVP-RECOMMENDATION.md", "data/mvp-scope.json"]
+    },
+    {
+      "number": 4,
+      "name": "platform-selector",
+      "status": "completed",
+      "confidence": "high",
+      "attempts": 1,
+      "outputs": ["PLATFORM-DECISION.md", "data/platform-decision.json"]
+    },
+    {
+      "number": 5,
+      "name": "stack-selector",
+      "status": "completed",
+      "confidence": "high",
+      "attempts": 1,
+      "outputs": ["STACK-ADR.md", "data/stack-config.json"]
+    },
+    {
+      "number": 6,
+      "name": "infra-designer",
+      "status": "completed",
+      "confidence": "high",
+      "attempts": 1,
+      "outputs": ["INFRA-DESIGN.md", "data/infra-config.json"]
+    },
+    {
+      "number": 7,
+      "name": "project-scaffolder",
+      "status": "completed",
+      "confidence": "high",
+      "attempts": 1,
+      "outputs": ["scaffold/novalens/", "scaffold/scaffold.sh"]
+    },
+    {
+      "number": 8,
+      "name": "output-gate",
+      "status": "completed",
+      "confidence": "high",
+      "attempts": 1,
+      "outputs": ["SUMMARY.md", "data/pipeline-progress.json"]
+    }
+  ],
+  "verification": {
+    "artifact_existence": "PASS",
+    "json_validity": "PASS",
+    "cross_stage_consistency": "PASS",
+    "handoff_chain": "PASS",
+    "budget_compliance": "PASS",
+    "scaffold_completeness": "PASS"
+  },
+  "metrics": {
+    "total_stages": 8,
+    "completed_stages": 8,
+    "first_pass_rate": "100%",
+    "average_retries": 0,
+    "escalations": 0,
+    "low_confidence_stages": [],
+    "unresolved_open_questions": []
+  }
+}

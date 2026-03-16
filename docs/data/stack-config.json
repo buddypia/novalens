@@ -1,0 +1,191 @@
+{
+  "version": "1.0.0",
+  "platform": "Web SPA (React + Vite + Lambda API)",
+  "stack": {
+    "frontend": {
+      "selected": {
+        "name": "React 19 + Vite 6 + TypeScript",
+        "version": "React 19.x, Vite 6.x, TypeScript 5.x",
+        "rationale": "React = Frontend 업계 표준 (npm 주간 2500만+ DL). Vite = 최고 속도의 번들러 (HMR 10ms). AWS S3+CloudFront 정적 배포에 최적. 해커톤 10주 타임라인에서 SPA가 가장 빠른 개발 속도. TypeScript로 백엔드(Lambda)와 타입 공유."
+      },
+      "alternatives": [
+        {
+          "name": "Vue 3 + Vite",
+          "score": 72,
+          "rejection_reason": "Vue 생태계가 React 대비 작음 (npm 주간 500만 vs 2500만). 팀의 React 경험 전제 하에 학습 비용 추가."
+        },
+        {
+          "name": "Svelte 5 + SvelteKit",
+          "score": 65,
+          "rejection_reason": "Svelte 5 (Runes)는 아직 초기. 에코시스템 규모 React의 1/10. 해커톤에서 라이브러리 부족 리스크."
+        }
+      ],
+      "atam_scores": {
+        "React+Vite": 85,
+        "Vue3+Vite": 72,
+        "Svelte5": 65
+      }
+    },
+    "styling": {
+      "selected": {
+        "name": "Tailwind CSS 4 + shadcn/ui",
+        "version": "Tailwind 4.x, shadcn/ui latest",
+        "rationale": "Tailwind = 가장 빠른 UI 개발 속도 (utility-first). shadcn/ui = 복사-기반 컴포넌트로 커스터마이징 자유도 최고. 해커톤 데모에서 인상적인 UI를 최소 시간으로 구현."
+      },
+      "alternatives": [
+        {
+          "name": "Material UI (MUI)",
+          "score": 68,
+          "rejection_reason": "번들 크기 과대 (~300KB gzipped). Material Design 특유의 외관이 개발자 도구에 부적합."
+        },
+        {
+          "name": "Chakra UI",
+          "score": 62,
+          "rejection_reason": "v3 전환 과도기 (breaking changes). shadcn/ui 대비 유연성 낮음."
+        }
+      ],
+      "atam_scores": {
+        "Tailwind+shadcn": 88,
+        "MUI": 68,
+        "ChakraUI": 62
+      }
+    },
+    "state_management": {
+      "selected": {
+        "name": "Zustand",
+        "version": "5.x",
+        "rationale": "Zustand = 가장 경량 (2KB gzipped) + 가장 직관적 API. npm 주간 600만+ DL로 업계 표준. 보일러플레이트 없이 즉시 사용 가능."
+      },
+      "alternatives": [
+        {
+          "name": "Jotai",
+          "score": 78,
+          "rejection_reason": "Atomic 모델은 NovaLens 규모에서 Zustand 대비 장점 미미. Zustand의 업계 채택률이 우위."
+        },
+        {
+          "name": "Redux Toolkit",
+          "score": 55,
+          "rejection_reason": "보일러플레이트 과다. 해커톤 10주에서 불필요한 복잡도. 이 규모에서 과잉 설계."
+        }
+      ],
+      "atam_scores": {
+        "Zustand": 85,
+        "Jotai": 78,
+        "ReduxToolkit": 55
+      }
+    },
+    "backend": {
+      "selected": {
+        "name": "AWS Lambda (Node.js 22 + TypeScript) + API Gateway",
+        "version": "Node.js 22 LTS, API Gateway REST",
+        "rationale": "AWS Lambda = 해커톤 핵심 (서버리스, AWS 네이티브). Node.js/TypeScript = 프론트엔드와 동일 언어로 타입 공유, 팀 스킬 통일. API Gateway = Lambda 트리거 + CORS + 스로틀링 내장. Free Tier로 월 100만 요청 무료."
+      },
+      "alternatives": [
+        {
+          "name": "Python Lambda (+ Powertools)",
+          "score": 72,
+          "rejection_reason": "Python은 AI/ML에 강하나, Bedrock API 호출은 어떤 언어에서도 가능. TypeScript와 이중 언어 사용으로 팀 스킬 분산. Cold start가 Node.js 대비 느림."
+        },
+        {
+          "name": "Hono on Lambda",
+          "score": 70,
+          "rejection_reason": "Hono는 Edge에 최적이나 Lambda에서는 Express/Fastify 대비 장점 미미. 생태계가 아직 성장 중 (npm 주간 80만 DL vs Express 3000만)."
+        }
+      ],
+      "atam_scores": {
+        "Lambda_NodeTS": 82,
+        "Lambda_Python": 72,
+        "Lambda_Hono": 70
+      }
+    },
+    "database": {
+      "selected": {
+        "name": "Amazon DynamoDB + Amazon S3",
+        "version": "DynamoDB on-demand, S3 Standard",
+        "rationale": "DynamoDB = AWS 네이티브 NoSQL (해커톤 평가 +). 분석 이력/사용자 메타데이터는 단순한 key-value 패턴에 적합. On-demand 모드로 0 traffic = $0. S3 = 스크린샷/리포트 저장에 최적. Free Tier 5GB. RDB(Aurora)는 이 규모에서 과잉."
+      },
+      "alternatives": [
+        {
+          "name": "Aurora Serverless v2 (PostgreSQL)",
+          "score": 60,
+          "rejection_reason": "최소 비용 ~$43/월로 예산($0-50) 거의 소진. 해커톤 MVP에서 관계형 DB의 장점이 발현되지 않는 단순 데이터 모델."
+        },
+        {
+          "name": "MongoDB Atlas (Serverless)",
+          "score": 58,
+          "rejection_reason": "AWS 네이티브 아님 (해커톤 평가 마이너스). Free Tier 512MB 제한. DynamoDB 대비 AWS 통합 약함."
+        }
+      ],
+      "atam_scores": {
+        "DynamoDB+S3": 85,
+        "AuroraServerless": 60,
+        "MongoDBAtlas": 58
+      }
+    },
+    "auth": {
+      "selected": {
+        "name": "Amazon Cognito",
+        "version": "Cognito User Pools + Hosted UI",
+        "rationale": "AWS 네이티브 인증 (해커톤 필수). Free Tier 50,000 MAU 무료. API Gateway 직접 통합으로 Lambda 불필요. Google/GitHub OAuth 지원. 해커톤 MVP에서 인증 구현에 최소 시간 투자."
+      },
+      "alternatives": [
+        {
+          "name": "Auth.js (NextAuth)",
+          "score": 45,
+          "rejection_reason": "SSR 프레임워크(Next.js) 전용 설계. SPA(React+Vite)에서는 부자연스러운 통합. AWS 네이티브 아님."
+        },
+        {
+          "name": "No Auth (Public API)",
+          "score": 40,
+          "rejection_reason": "보안 미비로 해커톤 평가 마이너스. Bedrock API 키가 노출될 리스크. 최소한의 인증 필요."
+        }
+      ],
+      "atam_scores": {
+        "Cognito": 80,
+        "AuthJS": 45,
+        "NoAuth": 40
+      }
+    },
+    "hosting": {
+      "selected": {
+        "name": "AWS S3 + CloudFront + Lambda + API Gateway (CDK)",
+        "version": "CDK v2",
+        "rationale": "전체 인프라를 CDK(TypeScript)로 IaC 관리. S3+CloudFront = 정적 프론트엔드 호스팅 ($0.023/GB). Lambda+APIGateway = 서버리스 API. 모두 AWS Free Tier 해당. 해커톤 심사에서 IaC 구현은 가산점."
+      },
+      "alternatives": [
+        {
+          "name": "AWS Amplify Hosting",
+          "score": 72,
+          "rejection_reason": "Amplify는 편리하나 CDK 대비 인프라 제어 유연성 감소. 해커톤에서 CDK 활용이 기술적 정교함 평가에 유리."
+        },
+        {
+          "name": "AWS App Runner",
+          "score": 55,
+          "rejection_reason": "컨테이너 기반으로 Lambda 대비 Cold start 없으나, 최소 비용 발생. SPA+Lambda 구조에 불필요한 복잡도."
+        }
+      ],
+      "atam_scores": {
+        "S3_CF_Lambda_CDK": 88,
+        "Amplify": 72,
+        "AppRunner": 55
+      }
+    }
+  },
+  "composite_profile": "async-moderate-low → serverless_event_driven",
+  "architecture_pattern": "serverless_monolith",
+  "communication_pattern": "request_reply + sse_streaming",
+  "compatibility_check": {
+    "passed": true,
+    "issues": [],
+    "verified_integrations": [
+      "React+Vite ↔ Tailwind+shadcn: Vite PostCSS plugin 네이티브 지원",
+      "Zustand ↔ React 19: 네이티브 호환 (useSyncExternalStore)",
+      "Lambda(Node.js) ↔ DynamoDB: AWS SDK v3 네이티브",
+      "Lambda ↔ Bedrock: @aws-sdk/client-bedrock-agent-runtime",
+      "Cognito ↔ API Gateway: Authorizer 직접 통합",
+      "S3 ↔ CloudFront: Origin Access Control 네이티브",
+      "CDK ↔ 전체 AWS 서비스: TypeScript로 통합 관리",
+      "GitHub Actions ↔ AWS: OIDC Federation (시크릿 불필요)"
+    ]
+  }
+}
