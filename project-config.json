@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "project_name": "novalens",
+  "display_name": "NovaLens",
+  "platform": "web-vite-spa",
+  "framework": "React 19 + Vite 6",
+  "language": "TypeScript",
+  "created_by": "brief2dev",
+  "created_at": "2026-03-16T10:55:00Z",
+  "monorepo": true,
+  "packages": {
+    "frontend": "frontend",
+    "backend": "backend",
+    "infra": "infra"
+  },
+  "paths": {
+    "source_root": "frontend/src",
+    "features": "frontend/src/features",
+    "shared": "frontend/src/shared",
+    "tests": "frontend/tests",
+    "tests_unit": "frontend/tests/unit",
+    "tests_e2e": "frontend/tests/e2e",
+    "docs_features": "docs/features",
+    "config": "frontend/src/config",
+    "public": "frontend/public",
+    "styles": "frontend/src",
+    "backend_src": "backend/src",
+    "backend_tests": "backend/tests",
+    "infra_src": "infra/lib",
+    "infra_bin": "infra/bin"
+  },
+  "conventions": {
+    "component_extension": ".tsx",
+    "style_approach": "tailwind",
+    "barrel_files": true,
+    "test_suffix": ".test.ts",
+    "feature_structure": ["types", "api", "hooks", "components"]
+  },
+  "quality": {
+    "test_framework": "vitest",
+    "e2e_framework": "playwright",
+    "linter": "eslint",
+    "formatter": "prettier",
+    "coverage_threshold": {
+      "statements": 80,
+      "branches": 70,
+      "functions": 80,
+      "lines": 80
+    }
+  },
+  "stack": {
+    "frontend": "React 19 + Vite 6 + TypeScript",
+    "styling": "Tailwind CSS 4 + shadcn/ui",
+    "state": "Zustand",
+    "backend": "AWS Lambda (Node.js 22 + TypeScript)",
+    "database": "Amazon DynamoDB + Amazon S3",
+    "auth": "Amazon Cognito",
+    "ai": "Amazon Bedrock (Nova 2 Lite) + Bedrock Agent",
+    "iac": "AWS CDK v2 (TypeScript)",
+    "cicd": "GitHub Actions",
+    "cdn": "Amazon CloudFront"
+  },
+  "aws": {
+    "region": "us-east-1",
+    "services": [
+      "Amazon Bedrock",
+      "AWS Lambda",
+      "Amazon API Gateway",
+      "Amazon S3",
+      "Amazon CloudFront",
+      "Amazon DynamoDB",
+      "Amazon Cognito",
+      "AWS CDK",
+      "Amazon CloudWatch"
+    ]
+  },
+  "stack_config_ref": "docs/brief2dev/data/stack-config.json",
+  "infra_config_ref": "docs/brief2dev/data/infra-config.json"
+}
