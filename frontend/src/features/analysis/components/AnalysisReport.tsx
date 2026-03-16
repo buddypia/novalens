@@ -6,6 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import type { Issue, Severity, IssueCategory, AnalysisResults } from '../types';
 import { SEVERITY_COLORS, CATEGORY_LABELS, SEVERITY_ORDER } from '../types';
 import { useAnalysisStore } from '../hooks/use-analysis-store';
+import { ReviewExportPanel } from './ReviewExportPanel';
 
 const SEVERITY_ICONS = {
   critical: AlertCircle,
@@ -220,6 +221,11 @@ export function AnalysisReport() {
           <IssueCategoryTab issues={results.codeIssues} category="code" />
         </TabsContent>
       </Tabs>
+
+      <Separator />
+
+      {/* Export to PR */}
+      <ReviewExportPanel />
     </div>
   );
 }

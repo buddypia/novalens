@@ -116,8 +116,7 @@ export class NovalensStack extends cdk.Stack {
       environment: {
         ANALYSIS_TABLE_NAME: analysisTable.tableName,
         STORAGE_BUCKET_NAME: storageBucket.bucketName,
-        BEDROCK_AGENT_ID: 'JFZQEARAAA',
-        BEDROCK_AGENT_ALIAS_ID: 'PGZMUBKQDE',
+        BEDROCK_MODEL_ID: 'us.amazon.nova-2-lite-v1:0',
         BEDROCK_REGION: 'us-east-1',
         STAGE: stage,
       },
@@ -136,9 +135,9 @@ export class NovalensStack extends cdk.Stack {
     agentFunction.addToRolePolicy(
       new iam.PolicyStatement({
         actions: [
-          'bedrock:InvokeAgent',
           'bedrock:InvokeModel',
           'bedrock:InvokeModelWithResponseStream',
+          'bedrock:Converse',
         ],
         resources: ['*'], // Scope to specific agent ARN in production
       }),

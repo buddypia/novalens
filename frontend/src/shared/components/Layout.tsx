@@ -1,6 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Scan, History, Github } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAnalysisStore } from '@features/analysis/hooks/use-analysis-store';
 
 const NAV_ITEMS = [
   { to: '/', label: 'Analyze', icon: Scan },
@@ -9,13 +10,14 @@ const NAV_ITEMS = [
 
 export function Layout() {
   const { pathname } = useLocation();
+  const reset = useAnalysisStore((s) => s.reset);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="mx-auto flex h-14 max-w-5xl items-center px-4">
-          <Link to="/" className="flex items-center gap-2 font-semibold">
+          <Link to="/" className="flex items-center gap-2 font-semibold" onClick={reset}>
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Scan className="h-4 w-4" />
             </div>

@@ -3,7 +3,9 @@ import { DynamoDBDocumentClient, PutCommand, GetCommand, QueryCommand, UpdateCom
 import type { AnalysisResult } from '../types/analysis.js';
 
 const client = new DynamoDBClient({});
-const docClient = DynamoDBDocumentClient.from(client);
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions: { removeUndefinedValues: true },
+});
 
 const TABLE_NAME = process.env.ANALYSIS_TABLE_NAME ?? 'NovaLensAnalysis';
 

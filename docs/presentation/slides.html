@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaLens - Amazon Nova AI Hackathon</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #09090b;
+    --surface: #18181b;
+    --surface-2: #27272a;
+    --border: #3f3f46;
+    --text: #fafafa;
+    --text-muted: #a1a1aa;
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --accent-pink: #ec4899;
+    --accent-green: #10b981;
+    --accent-orange: #f59e0b;
+    --accent-red: #ef4444;
+    --accent-blue: #3b82f6;
+    --nova-orange: #ff9900;
+  }
+
+  html, body { height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+  .deck { position: relative; width: 100vw; height: 100vh; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 40px 60px;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateX(40px);
+    overflow: hidden;
+  }
+  .slide.active { opacity: 1; visibility: visible; transform: translateX(0); }
+  .slide.pad-lg { padding: 60px 80px; }
+
+  /* Typography */
+  .slide-number { position: absolute; bottom: 20px; right: 30px; font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 500; background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); margin-bottom: 20px; }
+  .tag .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--nova-orange); animation: pulse 2s infinite; }
+  .tag.nova { border-color: rgba(255,153,0,0.3); }
+  .tag.nova .dot { background: var(--nova-orange); }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  h1 { font-size: 64px; font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 16px; }
+  h1 .gradient { background: linear-gradient(135deg, var(--primary), var(--accent-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  h2 { font-size: 44px; font-weight: 700; line-height: 1.15; letter-spacing: -1.5px; margin-bottom: 12px; }
+  h2 .gradient { background: linear-gradient(135deg, var(--primary), var(--accent-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  h2 .nova { color: var(--nova-orange); }
+  h3 { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+  .subtitle { font-size: 20px; color: var(--text-muted); line-height: 1.5; max-width: 700px; font-weight: 400; }
+
+  /* Helpers */
+  .center { text-align: center; align-items: center; }
+  .left { text-align: left; align-items: flex-start; }
+  .full-width { width: 100%; }
+  .mt-8 { margin-top: 8px; } .mt-12 { margin-top: 12px; } .mt-16 { margin-top: 16px; } .mt-20 { margin-top: 20px; } .mt-24 { margin-top: 24px; } .mt-32 { margin-top: 32px; } .mt-40 { margin-top: 40px; }
+  .mb-8 { margin-bottom: 8px; } .mb-16 { margin-bottom: 16px; }
+  .flex { display: flex; } .flex-col { flex-direction: column; }
+  .gap-8 { gap: 8px; } .gap-12 { gap: 12px; } .gap-16 { gap: 16px; } .gap-20 { gap: 20px; } .gap-24 { gap: 24px; }
+  .items-center { align-items: center; } .justify-center { justify-content: center; }
+
+  /* Grids */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; width: 100%; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; width: 100%; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px; text-align: left;
+  }
+  .card .icon {
+    width: 40px; height: 40px; border-radius: 10px; display: flex;
+    align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px;
+  }
+  .card h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Problem items */
+  .problem-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 18px 22px; background: var(--surface); border-radius: 12px;
+    border: 1px solid var(--border); width: 100%;
+  }
+  .problem-item .x { font-size: 22px; color: var(--accent-red); flex-shrink: 0; }
+  .problem-item h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .problem-item p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Flow steps */
+  .flow { display: flex; align-items: center; gap: 14px; width: 100%; }
+  .flow-step {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 24px 16px; background: var(--surface); border-radius: 14px;
+    border: 1px solid var(--border); text-align: center;
+  }
+  .flow-step .num {
+    width: 32px; height: 32px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-weight: 700;
+    font-size: 14px; margin-bottom: 10px;
+  }
+  .flow-step h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .flow-step p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .flow-arrow { font-size: 22px; color: var(--text-muted); flex-shrink: 0; }
+
+  /* Screenshots - LARGE */
+  .screenshot-hero {
+    border-radius: 12px; border: 1px solid var(--border);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    width: 100%; max-width: 1100px;
+    max-height: calc(100vh - 160px);
+    object-fit: contain;
+  }
+  .screenshot-full {
+    border-radius: 12px; border: 1px solid var(--border);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    width: 100%; max-width: 1000px;
+    max-height: calc(100vh - 200px);
+    object-fit: contain;
+  }
+  .screenshot-half {
+    border-radius: 10px; border: 1px solid var(--border);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    width: 100%;
+    object-fit: contain;
+  }
+
+  /* Stats */
+  .stat { text-align: center; }
+  .stat .value { font-size: 36px; font-weight: 800; letter-spacing: -1px; }
+  .stat .label { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .stat.green .value { color: var(--accent-green); }
+  .stat.blue .value { color: var(--accent-blue); }
+  .stat.pink .value { color: var(--accent-pink); }
+  .stat.orange .value { color: var(--nova-orange); }
+
+  /* Category pills */
+  .cat-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .cat-pill {
+    padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    background: var(--surface); border: 1px solid var(--border);
+  }
+  .cat-pill.active { background: var(--primary); border-color: var(--primary); color: white; }
+  .cat-pill.nova { background: rgba(255,153,0,0.12); border-color: rgba(255,153,0,0.3); color: var(--nova-orange); }
+
+  /* Architecture */
+  .arch-row { display: flex; gap: 12px; width: 100%; justify-content: center; flex-wrap: wrap; }
+  .arch-box {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 18px; background: var(--surface); border-radius: 10px;
+    border: 1px solid var(--border); font-size: 13px; font-weight: 500;
+  }
+  .arch-box.highlight { border-color: rgba(255,153,0,0.4); background: rgba(255,153,0,0.06); }
+  .arch-box .emoji { font-size: 16px; }
+  .arch-label { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+
+  /* Issue cards */
+  .issue-card {
+    padding: 18px 22px; border-radius: 12px; width: 100%;
+    border: 1px solid; text-align: left;
+  }
+  .issue-card.critical-card { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.2); }
+  .issue-card.major-card { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.2); }
+  .issue-card .issue-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .issue-card .issue-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .issue-card .issue-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; margin-left: 8px; }
+  .issue-card .issue-badge.crit { background: rgba(239,68,68,0.15); color: #f87171; }
+  .issue-card .issue-badge.maj { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .issue-card code { display: block; margin-top: 10px; padding: 8px 12px; border-radius: 6px; background: rgba(0,0,0,0.3); font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: #a5f3fc; }
+
+  /* Background glow */
+  .bg-glow {
+    position: absolute; width: 500px; height: 500px; border-radius: 50%;
+    filter: blur(120px); opacity: 0.12; pointer-events: none; z-index: -1;
+  }
+  .bg-glow.purple { background: var(--primary); top: -200px; right: -200px; }
+  .bg-glow.pink { background: var(--accent-pink); bottom: -200px; left: -200px; }
+  .bg-glow.orange { background: var(--nova-orange); top: -100px; left: -100px; }
+
+  /* Judging criteria bar */
+  .criteria-bar { display: flex; gap: 0; width: 100%; border-radius: 12px; overflow: hidden; height: 48px; }
+  .criteria-bar .seg { display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+  .criteria-bar .seg.tech { flex: 6; background: var(--primary); color: white; }
+  .criteria-bar .seg.impact { flex: 2; background: var(--accent-green); color: white; }
+  .criteria-bar .seg.creative { flex: 2; background: var(--accent-pink); color: white; }
+
+  /* CTA */
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 32px; border-radius: 12px; font-size: 16px; font-weight: 600;
+    background: linear-gradient(135deg, var(--primary), var(--accent-pink));
+    color: white; border: none; text-decoration: none;
+  }
+
+  /* Slide caption */
+  .slide-caption {
+    position: absolute; bottom: 60px; left: 60px; right: 60px;
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 20px; background: var(--surface); border-radius: 10px;
+    border: 1px solid var(--border); font-size: 13px; color: var(--text-muted);
+  }
+  .slide-caption strong { color: var(--text); }
+
+  /* Nav */
+  .nav {
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%); z-index: 100;
+    display: flex; gap: 6px; background: var(--surface);
+    padding: 6px 14px; border-radius: 100px; border: 1px solid var(--border);
+  }
+  .nav button {
+    width: 32px; height: 32px; border-radius: 50%; border: none;
+    background: transparent; color: var(--text-muted); cursor: pointer;
+    font-size: 14px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .nav button:hover { background: var(--surface-2); color: var(--text); }
+  .nav .counter { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; padding: 0 6px; }
+
+  /* Two-col with screenshot */
+  .split-screen { display: flex; gap: 40px; width: 100%; align-items: center; }
+  .split-screen .text-col { flex: 0 0 320px; }
+  .split-screen .img-col { flex: 1; display: flex; justify-content: center; }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ======== SLIDE 1: Title ======== -->
+  <div class="slide center pad-lg active" data-slide="0">
+    <div class="bg-glow purple"></div>
+    <div class="bg-glow pink"></div>
+    <div class="bg-glow orange"></div>
+    <div class="tag nova"><span class="dot"></span> Amazon Nova AI Hackathon 2026</div>
+    <h1><span class="gradient">NovaLens</span></h1>
+    <p style="font-size:26px; color: var(--text-muted); margin-bottom: 12px;">AI Visual Code Review Agent</p>
+    <p style="font-size: 16px; color: var(--text-muted); max-width: 550px; line-height: 1.6; margin-bottom: 32px;">
+      Cross-modal analysis of UI screenshots and PR code diffs<br>
+      powered by <span style="color: var(--nova-orange); font-weight: 600;">Amazon Nova 2 Lite</span> + <span style="color: var(--nova-orange); font-weight: 600;">Bedrock Agent</span>
+    </p>
+    <div class="flex gap-24">
+      <div class="cat-pill nova">Agentic AI</div>
+      <div class="cat-pill nova">Multimodal Understanding</div>
+    </div>
+    <div class="flex gap-24 mt-40">
+      <div class="stat orange"><div class="value">9</div><div class="label">AWS Services</div></div>
+      <div class="stat green"><div class="value">&lt;15s</div><div class="label">Analysis Time</div></div>
+      <div class="stat pink"><div class="value">$12</div><div class="label">/month MVP</div></div>
+      <div class="stat blue"><div class="value">4</div><div class="label">Issue Categories</div></div>
+    </div>
+    <div class="slide-number">1 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 2: Problem ======== -->
+  <div class="slide left pad-lg" data-slide="1">
+    <h2>The <span class="gradient">Problem</span></h2>
+    <p class="subtitle" style="max-width:800px; margin-bottom: 24px;">Code review tools check code. QA tools check visuals. Nothing checks <em>both at once</em>.</p>
+    <div class="full-width flex flex-col gap-12" style="max-width: 850px;">
+      <div class="problem-item">
+        <span class="x">&#10005;</span>
+        <div>
+          <h3>Code reviewers miss visual bugs</h3>
+          <p>A PR passes code review, but introduces broken layout or contrast violations that only appear in the rendered UI.</p>
+        </div>
+      </div>
+      <div class="problem-item">
+        <span class="x">&#10005;</span>
+        <div>
+          <h3>Visual QA catches issues too late</h3>
+          <p>Manual QA finds problems after merge, requiring expensive hotfixes and delayed releases.</p>
+        </div>
+      </div>
+      <div class="problem-item">
+        <span class="x">&#10005;</span>
+        <div>
+          <h3>Cross-modal mismatches are invisible</h3>
+          <p>A button looks clickable but has no handler. A loading state exists in code but renders nothing. No tool catches these.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number">2 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 3: Solution ======== -->
+  <div class="slide center pad-lg" data-slide="2">
+    <div class="bg-glow purple"></div>
+    <h2>The <span class="gradient">Solution</span></h2>
+    <p class="subtitle" style="font-size: 18px; margin-bottom: 28px;">
+      NovaLens is the first AI agent that cross-analyzes UI screenshots and source code<br>
+      simultaneously to catch bugs that fall between code review and visual QA.
+    </p>
+    <div class="grid-2" style="max-width: 780px;">
+      <div class="card">
+        <div class="icon" style="background:rgba(99,102,241,0.12); color: var(--primary);">&#128065;</div>
+        <h3>UI Visual Analysis</h3>
+        <p>Layout, contrast, spacing, and typography issues detected from screenshots using Nova 2 Lite vision.</p>
+      </div>
+      <div class="card">
+        <div class="icon" style="background:rgba(139,92,246,0.12); color: #8b5cf6;">&#60;/&#62;</div>
+        <h3>Code Structure Review</h3>
+        <p>Semantic HTML, ARIA attributes, CSS anti-patterns, and component architecture checks.</p>
+      </div>
+      <div class="card">
+        <div class="icon" style="background:rgba(236,72,153,0.12); color: var(--accent-pink);">&#8644;</div>
+        <h3>Cross-Modal Reasoning</h3>
+        <p>The key differentiator: AI correlates visual findings with code to find hidden mismatches.</p>
+      </div>
+      <div class="card">
+        <div class="icon" style="background:rgba(16,185,129,0.12); color: var(--accent-green);">&#9989;</div>
+        <h3>WCAG Compliance</h3>
+        <p>WCAG 2.1 AA/AAA checks with violation references and actionable fix code suggestions.</p>
+      </div>
+    </div>
+    <div class="slide-number">3 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 4: How It Works ======== -->
+  <div class="slide center pad-lg" data-slide="3">
+    <h2>How It <span class="gradient">Works</span></h2>
+    <p class="subtitle mb-8" style="font-size: 16px;">Three simple steps. Fully automated AI analysis.</p>
+    <div class="flow mt-24" style="max-width: 850px;">
+      <div class="flow-step">
+        <div class="num" style="background:rgba(99,102,241,0.15); color:var(--primary);">1</div>
+        <h3>Paste PR URL</h3>
+        <p>Enter any public GitHub PR. We auto-detect frontend files (.tsx, .jsx, .css, .vue).</p>
+      </div>
+      <span class="flow-arrow">&#8594;</span>
+      <div class="flow-step">
+        <div class="num" style="background:rgba(236,72,153,0.15); color:var(--accent-pink);">2</div>
+        <h3>Add Screenshot</h3>
+        <p>Upload a UI screenshot for visual + cross-modal analysis.</p>
+      </div>
+      <span class="flow-arrow">&#8594;</span>
+      <div class="flow-step">
+        <div class="num" style="background:rgba(16,185,129,0.15); color:var(--accent-green);">3</div>
+        <h3>Get AI Review</h3>
+        <p>Bedrock Agent analyzes code + screenshot in &lt;15s. Prioritized report with fix suggestions.</p>
+      </div>
+    </div>
+    <div class="slide-number">4 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 5: Demo Video ======== -->
+  <div class="slide center" data-slide="4" style="padding: 24px 40px;">
+    <div class="bg-glow purple"></div>
+    <p style="font-size: 14px; font-weight: 600; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px;">Demo Video</p>
+    <video controls style="border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 30px 80px rgba(0,0,0,0.6); width: 100%; max-width: 1100px; max-height: calc(100vh - 160px); object-fit: contain; background: #000;">
+      <source src="AmazonNovaAIHackathon2026.mp4" type="video/mp4">
+    </video>
+    <div class="slide-number">5 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 6: Demo - Landing (FULL) ======== -->
+  <div class="slide center" data-slide="5" style="padding: 24px 40px;">
+    <p style="font-size: 14px; font-weight: 600; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;">Demo: Landing Page</p>
+    <img src="screenshots/01-landing.png" class="screenshot-hero" alt="NovaLens Landing Page">
+    <div class="slide-number">6 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 7: Demo - Input Form (FULL) ======== -->
+  <div class="slide center" data-slide="6" style="padding: 24px 40px;">
+    <p style="font-size: 14px; font-weight: 600; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;">Demo: PR Input + Screenshot Upload</p>
+    <img src="screenshots/02-input-form.png" class="screenshot-hero" alt="PR Input Form with Screenshot">
+    <div class="slide-number">7 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 8: Demo - Cross-Modal (FULL) ======== -->
+  <div class="slide center" data-slide="7" style="padding: 24px 40px;">
+    <p style="font-size: 14px; font-weight: 600; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;">Demo: Cross-Modal Analysis Results</p>
+    <img src="screenshots/03-cross-modal.png" class="screenshot-hero" alt="Cross-Modal Analysis">
+    <div class="slide-number">8 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 9: Demo - Accessibility (FULL) ======== -->
+  <div class="slide center" data-slide="8" style="padding: 24px 40px;">
+    <p style="font-size: 14px; font-weight: 600; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;">Demo: Accessibility Issues (WCAG)</p>
+    <img src="screenshots/04-accessibility.png" class="screenshot-hero" alt="Accessibility Issues">
+    <div class="slide-number">9 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 10: Demo - UI Issues (FULL) ======== -->
+  <div class="slide center" data-slide="9" style="padding: 24px 40px;">
+    <p style="font-size: 14px; font-weight: 600; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;">Demo: UI Visual Issues</p>
+    <img src="screenshots/05-ui-issues.png" class="screenshot-hero" alt="UI Visual Issues">
+    <div class="slide-number">10 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 11: Demo - Code Issues (FULL) ======== -->
+  <div class="slide center" data-slide="10" style="padding: 24px 40px;">
+    <p style="font-size: 14px; font-weight: 600; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;">Demo: Code Quality Issues</p>
+    <img src="screenshots/06-code-issues.png" class="screenshot-hero" alt="Code Quality Issues">
+    <div class="slide-number">11 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 12: Why Amazon Nova ======== -->
+  <div class="slide left pad-lg" data-slide="11">
+    <div class="bg-glow orange"></div>
+    <h2>Why <span class="nova">Amazon Nova</span>?</h2>
+    <p class="subtitle" style="font-size: 16px; margin-bottom: 28px;">Nova 2 Lite's multimodal capabilities are the perfect fit for cross-modal code review.</p>
+    <div class="full-width flex flex-col gap-12" style="max-width: 850px;">
+      <div class="card" style="border-color: rgba(255,153,0,0.25);">
+        <div class="flex items-center gap-12 mb-8">
+          <div class="icon" style="background:rgba(255,153,0,0.12); color: var(--nova-orange); margin-bottom: 0;">&#129302;</div>
+          <div>
+            <h3 style="margin-bottom: 2px;">Nova 2 Lite &mdash; Multimodal Reasoning</h3>
+            <p>Processes both images and text in a single request. Analyzes UI screenshots alongside code diffs to detect cross-modal inconsistencies that no other model architecture can efficiently handle.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="border-color: rgba(255,153,0,0.25);">
+        <div class="flex items-center gap-12 mb-8">
+          <div class="icon" style="background:rgba(255,153,0,0.12); color: var(--nova-orange); margin-bottom: 0;">&#9881;</div>
+          <div>
+            <h3 style="margin-bottom: 2px;">Bedrock Agent &mdash; Autonomous Orchestration</h3>
+            <p>Agent autonomously selects and chains 4 analysis tools (UI, Code, Cross-Modal, Report) without manual workflow orchestration. True agentic AI behavior.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="border-color: rgba(255,153,0,0.25);">
+        <div class="flex items-center gap-12 mb-8">
+          <div class="icon" style="background:rgba(255,153,0,0.12); color: var(--nova-orange); margin-bottom: 0;">&#128176;</div>
+          <div>
+            <h3 style="margin-bottom: 2px;">Cost-Efficient at Scale</h3>
+            <p>Nova 2 Lite provides enterprise-grade multimodal reasoning at a fraction of the cost. Full MVP runs at ~$12/month including all 9 AWS services.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number">12 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 13: Architecture ======== -->
+  <div class="slide center pad-lg" data-slide="12">
+    <h2><span class="gradient">Architecture</span> &mdash; 9 AWS Services</h2>
+    <p class="subtitle" style="font-size: 15px; margin-bottom: 28px;">Fully serverless. ~$12/month MVP. Scales to 10,000 users at ~$150/month.</p>
+
+    <div class="full-width flex flex-col gap-20" style="max-width: 850px;">
+      <div>
+        <div class="arch-label">AI Core (Amazon Nova)</div>
+        <div class="arch-row">
+          <div class="arch-box highlight"><span class="emoji">&#129302;</span> <div>Amazon Bedrock<br><small style="color:var(--nova-orange)">Nova 2 Lite + Agent</small></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="arch-label">Backend</div>
+        <div class="arch-row">
+          <div class="arch-box"><span class="emoji">&#9889;</span> <div>Lambda<br><small style="color:var(--text-muted)">Node.js 22</small></div></div>
+          <div class="arch-box"><span class="emoji">&#128279;</span> <div>API Gateway<br><small style="color:var(--text-muted)">REST + Auth</small></div></div>
+          <div class="arch-box"><span class="emoji">&#128202;</span> <div>DynamoDB<br><small style="color:var(--text-muted)">On-demand</small></div></div>
+          <div class="arch-box"><span class="emoji">&#128230;</span> <div>S3<br><small style="color:var(--text-muted)">Storage</small></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="arch-label">Frontend & Infrastructure</div>
+        <div class="arch-row">
+          <div class="arch-box"><span class="emoji">&#127760;</span> <div>CloudFront<br><small style="color:var(--text-muted)">CDN</small></div></div>
+          <div class="arch-box"><span class="emoji">&#128274;</span> <div>Cognito<br><small style="color:var(--text-muted)">Auth</small></div></div>
+          <div class="arch-box"><span class="emoji">&#128736;</span> <div>CDK v2<br><small style="color:var(--text-muted)">IaC</small></div></div>
+          <div class="arch-box"><span class="emoji">&#128200;</span> <div>CloudWatch<br><small style="color:var(--text-muted)">Monitoring</small></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3 mt-24" style="max-width: 600px;">
+      <div class="card" style="text-align:center; padding: 16px;">
+        <h3 style="font-size:14px; color: var(--text-muted);">Frontend</h3>
+        <p style="font-size: 12px;">React 19 + Vite 6<br>Tailwind + shadcn/ui</p>
+      </div>
+      <div class="card" style="text-align:center; padding: 16px;">
+        <h3 style="font-size:14px; color: var(--text-muted);">Backend</h3>
+        <p style="font-size: 12px;">TypeScript<br>Lambda + API GW</p>
+      </div>
+      <div class="card" style="text-align:center; padding: 16px;">
+        <h3 style="font-size:14px; color: var(--text-muted);">Testing</h3>
+        <p style="font-size: 12px;">Vitest + Playwright<br>80% coverage</p>
+      </div>
+    </div>
+    <div class="slide-number">13 / 14</div>
+  </div>
+
+  <!-- ======== SLIDE 14: Thank You ======== -->
+  <div class="slide center pad-lg" data-slide="13">
+    <div class="bg-glow purple"></div>
+    <div class="bg-glow pink"></div>
+    <div class="bg-glow orange"></div>
+    <div class="tag nova"><span class="dot"></span> Amazon Nova AI Hackathon 2026</div>
+    <h1><span class="gradient">NovaLens</span></h1>
+    <p style="font-size: 22px; color: var(--text-muted); margin-bottom: 8px;">
+      Stop reviewing code blind. See what your users see.
+    </p>
+    <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 32px; max-width: 500px; line-height: 1.6;">
+      The first AI agent that bridges code review and visual QA<br>
+      using Amazon Nova's multimodal reasoning.
+    </p>
+
+    <div class="flex gap-20 mb-16">
+      <div class="cat-pill nova">Agentic AI</div>
+      <div class="cat-pill nova">Multimodal Understanding</div>
+    </div>
+
+    <div class="criteria-bar mt-16" style="max-width: 600px;">
+      <div class="seg tech">Technical 60%</div>
+      <div class="seg impact">Impact 20%</div>
+      <div class="seg creative">Creative 20%</div>
+    </div>
+    <p style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">Judging Criteria Alignment</p>
+
+    <div class="flex gap-24 mt-32">
+      <div class="stat orange"><div class="value">9</div><div class="label">AWS Services</div></div>
+      <div class="stat green"><div class="value">&lt;15s</div><div class="label">Per Analysis</div></div>
+      <div class="stat pink"><div class="value">$12</div><div class="label">Monthly Cost</div></div>
+      <div class="stat blue"><div class="value">11+</div><div class="label">Issue Types</div></div>
+    </div>
+
+    <div class="mt-32">
+      <a class="cta-btn" href="https://github.com/buddypia/novalens" target="_blank">
+        github.com/buddypia/novalens &#8594;
+      </a>
+    </div>
+    <div class="slide-number">14 / 14</div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <button onclick="navigate(-1)" title="Previous (Left Arrow)">&#8592;</button>
+  <span class="counter"><span id="current">1</span> / <span id="total">14</span></span>
+  <button onclick="navigate(1)" title="Next (Right Arrow)">&#8594;</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  document.getElementById('total').textContent = total;
+
+  function showSlide(idx) {
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    current = idx;
+    document.getElementById('current').textContent = idx + 1;
+  }
+
+  function navigate(dir) {
+    let next = current + dir;
+    if (next < 0) next = 0;
+    if (next >= total) next = total - 1;
+    showSlide(next);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); navigate(1); }
+    if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); navigate(-1); }
+    if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+    if (e.key === 'End') { e.preventDefault(); showSlide(total - 1); }
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) navigate(diff > 0 ? 1 : -1);
+  });
+</script>
+
+</body>
+</html>

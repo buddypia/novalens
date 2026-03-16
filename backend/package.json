@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "esbuild src/handlers/*.ts --bundle --platform=node --target=node22 --outdir=dist --format=esm --external:@aws-sdk/* --watch",
-    "dev:server": "tsx --env-file=../.env.local src/dev-server.ts",
+    "dev": "tsx --env-file=../.env.local src/dev-server.ts",
+    "dev:watch": "esbuild src/handlers/*.ts --bundle --platform=node --target=node22 --outdir=dist --format=esm --external:@aws-sdk/* --watch",
     "build": "esbuild src/handlers/*.ts --bundle --platform=node --target=node22 --outdir=dist --format=esm --external:@aws-sdk/* && echo '{\"type\":\"module\"}' > dist/package.json",
     "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
     "typecheck": "tsc --noEmit",
@@ -28,6 +28,7 @@
     "@types/node": "^22.10.0",
     "@types/uuid": "^10.0.0",
     "esbuild": "^0.24.0",
+    "tsx": "^4.21.0",
     "eslint": "^9.17.0",
     "typescript": "^5.7.0",
     "typescript-eslint": "^8.18.0",
