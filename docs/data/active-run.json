@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "run_id": "brief2dev-20260316-novalens",
+  "status": "paused",
+  "pipeline_type": "BRIEF2DEV_FULL",
+  "current_stage": "output_gate",
+  "started_at": "2026-03-16T10:00:00.000Z",
+  "updated_at": "2026-03-16T12:52:10.653Z",
+  "stages": {
+    "intake": {
+      "status": "completed",
+      "started_at": "2026-03-16T10:00:00.000Z",
+      "completed_at": "2026-03-16T12:26:53.935Z",
+      "model": "opus",
+      "confidence": 0.9,
+      "evidence_grade": null,
+      "retry_count": 0,
+      "error": null
+    },
+    "market_research": {
+      "status": "completed",
+      "started_at": "2026-03-16T12:26:53.935Z",
+      "completed_at": "2026-03-16T12:32:54.038Z",
+      "model": null,
+      "confidence": 0.9,
+      "evidence_grade": null,
+      "retry_count": 0,
+      "error": null
+    },
+    "mvp_scoping": {
+      "status": "completed",
+      "started_at": "2026-03-16T12:32:54.038Z",
+      "completed_at": "2026-03-16T12:36:19.920Z",
+      "model": null,
+      "confidence": 0.9,
+      "evidence_grade": null,
+      "retry_count": 0,
+      "error": null
+    },
+    "platform_decision": {
+      "status": "completed",
+      "started_at": "2026-03-16T12:36:19.920Z",
+      "completed_at": "2026-03-16T12:38:23.342Z",
+      "model": null,
+      "confidence": 0.9,
+      "evidence_grade": null,
+      "retry_count": 0,
+      "error": null
+    },
+    "stack_selection": {
+      "status": "completed",
+      "started_at": "2026-03-16T12:38:23.342Z",
+      "completed_at": "2026-03-16T12:41:59.164Z",
+      "model": null,
+      "confidence": 0.9,
+      "evidence_grade": null,
+      "retry_count": 0,
+      "error": null
+    },
+    "infra_design": {
+      "status": "completed",
+      "started_at": "2026-03-16T12:41:59.164Z",
+      "completed_at": "2026-03-16T12:44:21.107Z",
+      "model": null,
+      "confidence": 0.9,
+      "evidence_grade": null,
+      "retry_count": 0,
+      "error": null
+    },
+    "scaffolding": {
+      "status": "paused",
+      "started_at": "2026-03-16T12:44:21.107Z",
+      "completed_at": null,
+      "model": null,
+      "confidence": null,
+      "evidence_grade": null,
+      "retry_count": 0,
+      "error": null
+    },
+    "output_gate": {
+      "status": "running",
+      "started_at": "2026-03-16T13:00:00.000Z",
+      "completed_at": null,
+      "model": null,
+      "confidence": null,
+      "evidence_grade": null,
+      "retry_count": 0,
+      "error": null
+    }
+  },
+  "shared_context": {
+    "business_description": "NovaLens - AI Visual Code Review Agent. UI 스크린샷과 구현 코드 간의 시각적/구조적 갭을 Nova 2 Lite 멀티모달 에이전트로 자동 검출하는 개발자 도구. AWS 해커톤/챌린지 컨텍스트.",
+    "selected_platform": null,
+    "selected_stack": null,
+    "budget_constraint": "low",
+    "adr_decisions": []
+  },
+  "transition_log": [
+    {
+      "from": null,
+      "to": "intake",
+      "timestamp": "2026-03-16T10:00:00.000Z",
+      "reason": "Pipeline started"
+    },
+    {
+      "from": "intake",
+      "to": "market_research",
+      "at": "2026-03-16T12:26:53.935Z",
+      "trigger": "auto_advance",
+      "note": "Stage intake completed (confidence: 0.9, evidence: N/A)"
+    },
+    {
+      "from": "market_research",
+      "to": "mvp_scoping",
+      "at": "2026-03-16T12:32:54.038Z",
+      "trigger": "auto_advance",
+      "note": "Stage market_research completed (confidence: 0.9, evidence: N/A)"
+    },
+    {
+      "from": "mvp_scoping",
+      "to": "platform_decision",
+      "at": "2026-03-16T12:36:19.920Z",
+      "trigger": "auto_advance",
+      "note": "Stage mvp_scoping completed (confidence: 0.9, evidence: N/A)"
+    },
+    {
+      "from": "platform_decision",
+      "to": "stack_selection",
+      "at": "2026-03-16T12:38:23.342Z",
+      "trigger": "auto_advance",
+      "note": "Stage platform_decision completed (confidence: 0.9, evidence: N/A)"
+    },
+    {
+      "from": "stack_selection",
+      "to": "infra_design",
+      "at": "2026-03-16T12:41:59.164Z",
+      "trigger": "auto_advance",
+      "note": "Stage stack_selection completed (confidence: 0.9, evidence: N/A)"
+    },
+    {
+      "from": "infra_design",
+      "to": "scaffolding",
+      "at": "2026-03-16T12:44:21.107Z",
+      "trigger": "auto_advance",
+      "note": "Stage infra_design completed (confidence: 0.9, evidence: N/A)"
+    }
+  ]
+}

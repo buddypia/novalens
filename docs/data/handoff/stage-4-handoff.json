@@ -1,0 +1,44 @@
+{
+  "handoff_version": "1.0",
+  "from_stage": { "number": 4, "skill": "platform-selector", "model_used": "opus" },
+  "to_stage": { "number": 5, "skill": "stack-selector" },
+  "timestamp": "2026-03-16T10:35:00Z",
+  "result": {
+    "status": "PASS",
+    "confidence": "high",
+    "output_files": ["PLATFORM-DECISION.md", "data/platform-decision.json"]
+  },
+  "context": {
+    "key_decisions": [
+      "플랫폼: Web SPA (React + Vite + Lambda API) 선정 — Score 73/100 (1위)",
+      "배포: S3 + CloudFront (frontend) + Lambda + API Gateway (backend)",
+      "3안 비교 완료: Web SPA (73) > Next.js SSR (71) > Tauri Desktop (50)",
+      "멀티플랫폼 전략: Web SPA → CLI → VS Code Extension (단계적)"
+    ],
+    "assumptions": [
+      "React + Vite가 해커톤 수준에서 충분한 DX를 제공",
+      "SSE/WebSocket으로 에이전트 추론 실시간 스트리밍 가능"
+    ],
+    "open_questions": [
+      "에이전트 추론 스트리밍에 WebSocket vs SSE 중 어느 것이 Lambda와 호환 좋은지"
+    ],
+    "constraints_propagated": [
+      "platform: Web SPA",
+      "frontend: React + Vite",
+      "backend: AWS Lambda + API Gateway",
+      "hosting: S3 + CloudFront",
+      "iac: AWS CDK",
+      "budget: $5-15/month operational"
+    ]
+  },
+  "quality": {
+    "tier": "Critical",
+    "checks_passed": [
+      "플랫폼 결정 명시: Web SPA",
+      "3안 비교 완료 (Web SPA, Next.js SSR, Tauri Desktop)",
+      "가중 점수 산출 완료 (73, 71, 50)",
+      "비용 추정 포함 ($5-15/월)"
+    ],
+    "warnings": []
+  }
+}
