@@ -159,34 +159,18 @@ export class NovalensStack extends cdk.Stack {
       },
     });
 
-    const authorizer = new apigateway.CognitoUserPoolsAuthorizer(this, 'Authorizer', {
-      cognitoUserPools: [userPool],
-    });
-
     const apiResource = api.root.addResource('api');
 
     const analyses = apiResource.addResource('analyses');
-    analyses.addMethod('POST', new apigateway.LambdaIntegration(apiFunction), {
-      authorizer,
-      authorizationType: apigateway.AuthorizationType.COGNITO,
-    });
-    analyses.addMethod('GET', new apigateway.LambdaIntegration(apiFunction), {
-      authorizer,
-      authorizationType: apigateway.AuthorizationType.COGNITO,
-    });
+    analyses.addMethod('POST', new apigateway.LambdaIntegration(apiFunction));
+    analyses.addMethod('GET', new apigateway.LambdaIntegration(apiFunction));
 
     const analysisById = analyses.addResource('{id}');
-    analysisById.addMethod('GET', new apigateway.LambdaIntegration(apiFunction), {
-      authorizer,
-      authorizationType: apigateway.AuthorizationType.COGNITO,
-    });
+    analysisById.addMethod('GET', new apigateway.LambdaIntegration(apiFunction));
 
     // Upload URL endpoint
     const uploadUrl = apiResource.addResource('upload-url');
-    uploadUrl.addMethod('POST', new apigateway.LambdaIntegration(apiFunction), {
-      authorizer,
-      authorizationType: apigateway.AuthorizationType.COGNITO,
-    });
+    uploadUrl.addMethod('POST', new apigateway.LambdaIntegration(apiFunction));
 
     // --- CloudFront ---
     const distribution = new cloudfront.Distribution(this, 'Distribution', {

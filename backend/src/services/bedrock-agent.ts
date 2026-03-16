@@ -63,7 +63,19 @@ export async function invokeAgent(
       }
     }
 
-    const results = parseAgentResponse(fullResponse);
+    let results = parseAgentResponse(fullResponse);
+
+    // If main response parsing yielded no issues, extract from trace tool outputs
+    const totalIssues =
+      results.uiIssues.length +
+      results.codeIssues.length +
+      results.crossModalIssues.length +
+      results.accessibilityIssues.length;
+
+    if (totalIssues === 0 && traceSteps.length > 0) {
+      results = buildResultsFromTrace(traceSteps);
+    }
+
     await updateAnalysisResult(analysisId, userId, results, traceSteps);
   } catch (error) {
     console.error('Bedrock Agent invocation failed:', error);
@@ -151,4 +163,69 @@ function validateSeverity(value: unknown): Issue['severity'] {
     return value;
   }
   return 'info';
+}
+
+const TOOL_CATEGORY_MAP: Record<string, keyof ReturnType<typeof buildResultsFromTrace>> = {
+  analyzeCodeQuality: 'codeIssues',
+  analyzeUIDesign: 'uiIssues',
+  checkAccessibility: 'accessibilityIssues',
+  crossModalAnalysis: 'crossModalIssues',
+};
+
+function buildResultsFromTrace(steps: AgentStep[]): NonNullable<AnalysisResult['results']> {
+  const results: NonNullable<AnalysisResult['results']> = {
+    uiIssues: [],
+    codeIssues: [],
+    crossModalIssues: [],
+    accessibilityIssues: [],
+    summary: '',
+    score: 0,
+  };
+
+  for (const step of steps) {
+    const category = TOOL_CATEGORY_MAP[step.toolName];
+    if (!category || !step.output) continue;
+
+    // Extract JSON array from markdown code block or raw JSON
+    const jsonMatch = step.output.match(/```(?:json)?\s*([\s\S]*?)```/) ?? step.output.match(/(\[[\s\S]*\])/);
+    if (!jsonMatch?.[1]) continue;
+
+    try {
+      const issues = JSON.parse(jsonMatch[1]);
+      if (Array.isArray(issues)) {
+        const categoryName = category.replace('Issues', '').replace('crossModal', 'cross-modal');
+        results[category] = normalizeIssues(issues, categoryName);
+      }
+    } catch {
+      // skip unparseable output
+    }
+  }
+
+  const total =
+    results.uiIssues.length +
+    results.codeIssues.length +
+    results.crossModalIssues.length +
+    results.accessibilityIssues.length;
+
+  const criticals = [
+    ...results.uiIssues,
+    ...results.codeIssues,
+    ...results.crossModalIssues,
+    ...results.accessibilityIssues,
+  ].filter((i) => i.severity === 'critical').length;
+
+  const majors = [
+    ...results.uiIssues,
+    ...results.codeIssues,
+    ...results.crossModalIssues,
+    ...results.accessibilityIssues,
+  ].filter((i) => i.severity === 'major').length;
+
+  results.score = Math.max(0, 100 - criticals * 20 - majors * 10 - (total - criticals - majors) * 3);
+  results.summary = `Found ${total} issue${total !== 1 ? 's' : ''} across ${
+    [results.uiIssues, results.codeIssues, results.crossModalIssues, results.accessibilityIssues]
+      .filter((a) => a.length > 0).length
+  } categories.`;
+
+  return results;
 }

@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "esbuild src/handlers/*.ts --bundle --platform=node --target=node22 --outdir=dist --format=esm --external:@aws-sdk/* --watch",
-    "build": "esbuild src/handlers/*.ts --bundle --platform=node --target=node22 --outdir=dist --format=esm --external:@aws-sdk/*",
+    "dev:server": "tsx --env-file=../.env.local src/dev-server.ts",
+    "build": "esbuild src/handlers/*.ts --bundle --platform=node --target=node22 --outdir=dist --format=esm --external:@aws-sdk/* && echo '{\"type\":\"module\"}' > dist/package.json",
     "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

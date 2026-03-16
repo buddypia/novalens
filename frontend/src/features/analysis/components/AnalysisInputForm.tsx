@@ -38,8 +38,6 @@ import {
   type PRFile,
 } from '../api/github';
 
-const SAMPLE_PR_URL = 'https://github.com/facebook/react/pull/28271';
-
 const HOW_IT_WORKS = [
   {
     step: 1,
@@ -138,11 +136,6 @@ export function AnalysisInputForm() {
     }
   };
 
-  const loadSample = () => {
-    setPrUrl(SAMPLE_PR_URL);
-    fetchPR(SAMPLE_PR_URL);
-  };
-
   const handleSubmit = () => {
     if (!prInfo || frontendFiles.length === 0) return;
     const lang = detectLanguage(frontendFiles);
@@ -202,14 +195,6 @@ export function AnalysisInputForm() {
               <GitPullRequest className="h-4 w-4" />
               {prInfo ? 'Pull Request' : 'Step 1 — Paste PR URL'}
             </CardTitle>
-            {!prInfo && (
-              <button
-                onClick={loadSample}
-                className="text-xs text-primary hover:text-primary/80 font-medium"
-              >
-                Try sample PR
-              </button>
-            )}
             {prInfo && (
               <Button
                 variant="ghost"
