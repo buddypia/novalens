@@ -12,9 +12,9 @@ import {
   Eye,
   Code,
   GitCompareArrows,
-  ImageIcon,
   ArrowRight,
 } from 'lucide-react';
+import { HeroSection } from './HeroSection';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -39,27 +39,6 @@ import {
 } from '../api/github';
 
 const SAMPLE_PR_URL = 'https://github.com/facebook/react/pull/28271';
-
-const HOW_IT_WORKS = [
-  {
-    step: 1,
-    icon: GitPullRequest,
-    title: 'Paste PR URL',
-    desc: 'Enter any public GitHub PR link. We auto-detect frontend file changes.',
-  },
-  {
-    step: 2,
-    icon: ImageIcon,
-    title: 'Add Screenshot',
-    desc: 'Upload a UI screenshot to enable visual cross-modal analysis.',
-  },
-  {
-    step: 3,
-    icon: Sparkles,
-    title: 'Get AI Review',
-    desc: 'Nova 2 Lite analyzes your diff for UI, code, and accessibility issues.',
-  },
-] as const;
 
 export function AnalysisInputForm() {
   const { submitAnalysis, isSubmitting } = useAnalysisStore();
@@ -162,36 +141,9 @@ export function AnalysisInputForm() {
 
   return (
     <div className="space-y-8">
-      {/* How It Works - only show before PR is fetched */}
+      {/* Hero Section - only show before PR is fetched */}
       {!prInfo && (
-        <div className="space-y-4">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold tracking-tight">
-              AI-Powered Visual Code Review
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Paste a GitHub PR link and let AI catch UI bugs, accessibility issues,
-              and code-visual mismatches before they reach production.
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {HOW_IT_WORKS.map(({ step, icon: Icon, title, desc }) => (
-              <div
-                key={step}
-                className="relative flex flex-col items-center rounded-lg border bg-card p-4 text-center"
-              >
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <Icon className="h-4.5 w-4.5" />
-                </div>
-                <span className="absolute top-2 left-3 text-xs font-bold text-muted-foreground/40">
-                  {step}
-                </span>
-                <h3 className="mt-2 text-sm font-medium">{title}</h3>
-                <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <HeroSection onGetStarted={() => document.getElementById('pr-url-input')?.focus()} />
       )}
 
       {/* Step 1: PR URL Input */}
@@ -233,6 +185,7 @@ export function AnalysisInputForm() {
             <>
               <div className="flex gap-2">
                 <Input
+                  id="pr-url-input"
                   value={prUrl}
                   onChange={(e) => setPrUrl(e.target.value)}
                   onKeyDown={handleKeyDown}
